@@ -1,6 +1,5 @@
 # 웹/모바일(웹 기술) 스켈레톤 프로젝트
 
-
 ## 카테고리
 
 | Application | Domain | Language | Framework |
@@ -12,7 +11,6 @@
 | :black_square_button: iOS App | :black_square_button: AR/VR/Metaverse | :white_check_mark: Python | :white_check_mark: Flask/Django |
 | :black_square_button: Desktop App | :black_square_button: Game | :white_check_mark: Java | :white_check_mark: Spring/Springboot |
 | | | :black_square_button: Kotlin | |
-
 
 ## 프로젝트 소개
 
