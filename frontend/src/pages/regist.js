@@ -5,6 +5,8 @@ import { Helmet } from 'react-helmet'
 
 import { Layout } from '../components/common'
 
+import api from "../utils/api"
+
 /**
 * Regist page (/:regist)
 */
@@ -40,6 +42,7 @@ const Regist = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        console.log(inputState)
 
         let isNormal = true;
         let msg = "";
@@ -50,13 +53,13 @@ const Regist = () => {
         } else if (!idReg.test(inputState.id)) {
             isNormal = false;
             msg = "아이디의 양식을 확인해주세요."
-            isNormal = false;
         } else if (!inputState.password) {
+            isNormal = false;
             msg = "비밀번호를 입력해주세요."
         } else if (!pwReg.test(inputState.password)) {
             isNormal = false;
             msg = "비밀번호 양식을 확인해주세요."
-        } else if (inputState.password === inputState.passwordConfirm) {
+        } else if (inputState.password != inputState.passwordConfirm) {
             isNormal = false;
             msg = "비밀번호가 동일하지 않습니다."
         } else if (!inputState.name) {
@@ -74,12 +77,23 @@ const Regist = () => {
         } else if (!phoneReg.test(inputState.phone)) {
             isNormal = false;
             msg = "전화번호 양식을 확인해주세요."
+        } else {
+            isNormal = true;
         }
 
         if (isNormal) {
-            alert("가입 성공", inputState.id, inputState.password)
+            registAPI()
+            .then(res => {alert(`회원가입 성공: ${res}`); console.log(res.data.message)})
+            .catch(err => alert(`회원가입 실패: ${err}`));
         } else {
             alert(msg)
+        }
+
+        async function registAPI() {
+            return await api.post("/api/v1/users", {
+                id: inputState.id,
+                password: inputState.password
+            });
         }
     };
 
