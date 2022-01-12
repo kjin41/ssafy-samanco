@@ -79,7 +79,7 @@ exports.onPostBuild = /*#__PURE__*/function () {
 
               generateIcons(manifest.icons, icon).then(function () {
                 //images have been generated
-                console.log("done generating icons for manifest");
+                // console.log("done generating icons for manifest");
                 Promise.resolve();
               });
             } else {

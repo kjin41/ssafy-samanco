@@ -5,6 +5,7 @@ import { graphql } from 'gatsby'
 import { Layout, PostCard, Pagination } from '../components/common'
 import { MetaData } from '../components/common/meta'
 
+import "../styles/global.css"
 /**
 * Main index page (home page) : 메인 페이지
 *
