@@ -21,7 +21,7 @@ import '../../styles/app.css'
 const DefaultLayout = ({ data, children, bodyClass, isHome }) => {
     // data : 사이트 관련 정보
     // children : 메인 컨텐츠
-    // bodyClass : 헬멧 태그의 클래스명 
+    // bodyClass : 헬멧 태그의 클래스명
     // isHome : 메인 페이지인지 여부 반환
     const site = data.allGhostSettings.edges[0].node
     const twitterUrl = site.twitter ? `https://twitter.com/${site.twitter.replace(/^@/, ``)}` : null
@@ -84,13 +84,15 @@ const DefaultLayout = ({ data, children, bodyClass, isHome }) => {
                         </div>
                     </header>
 
-                    <main className="site-main">
+
+
+                </div>
+
+                <main className="site-main h-full">
                         {/* All the main content gets inserted here, index.js, post.js */}
                         {/* 메인 컨텐츠 */}
                         {children}
                     </main>
-
-                </div>
 
                 <div className="viewport-bottom">
                     {/* The footer at the very bottom of the screen */}
