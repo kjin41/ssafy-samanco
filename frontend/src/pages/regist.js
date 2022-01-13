@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import PropTypes from 'prop-types'
-import { graphql } from 'gatsby'
+import { graphql, navigate } from 'gatsby'
 import { Helmet } from 'react-helmet'
 
 import { Layout } from '../components/common'
@@ -15,6 +15,7 @@ const Regist = () => {
     // id, password 유효성 검사 반환 결과 : idCheckRes, pwCheckRes
     const [idCheckRes, setIdCheckRes] = useState(null);
     const [pwCheckRes, setPwCheckRes] = useState(null);
+    const [pwSameRes, setPwSameRes] = useState(null);
 
     const [inputState, setInputState] = useState({
         id: "",
@@ -46,6 +47,11 @@ const Regist = () => {
             setPwCheckRes({code:res.statusCode, msg: res.message})
         })
     };
+
+    const pwSameCheck = (e) => {
+        const value = e.target.value;
+        setPwSameRes(inputState.password == value? true : false);
+    }
 
     const idReg = /^[A-Za-z0-9_-]{4,8}$/;
     // 아이디 정규표현식 : 최소 4자, 최대 8자
@@ -101,8 +107,16 @@ const Regist = () => {
 
         if (isNormal) {
             registAPI(inputState)
-            .then(res => {alert(`회원가입 성공: ${res.data.message}`); })
-            .catch(err => alert(`회원가입 실패: ${err}`));
+            .then(res => {
+                if (res.statusCode == 200) {
+                    // 가입 성공 시
+                    alert("가입이 되었습니다!");
+                    // 페이지 이동
+                    navigate("/login",
+                    { replace: true })
+                }
+                else
+                    alert(`${res.message}`); })
         } else {
             alert(msg)
         }
@@ -128,13 +142,13 @@ const Regist = () => {
 
                             {/* 아이디 유효성 결과 */}
                             {/* 1. 사용 가능 */}
-                            {idCheckRes && idCheckRes.code == 200 ?
+                            {inputState.id != "" && idCheckRes && idCheckRes.code == 200 ?
                             <div class="p-4 mb-4 text-sm text-gray-700 bg-green-100 rounded-lg dark:bg-gray-700 dark:text-gray-300" role="alert">
                                 <span class="font-medium">{idCheckRes.msg}</span>
                             </div>
                             :null}
                             {/* 2. 사용 불가능 */}
-                            {idCheckRes && idCheckRes.code != 200 ?
+                            {inputState.id != "" && idCheckRes && idCheckRes.code != 200 ?
                             <div class="p-4 mb-4 text-sm text-gray-700 bg-red-100 rounded-lg dark:bg-gray-700 dark:text-gray-300" role="alert">
                                 <span class="font-medium">{idCheckRes.msg}</span>
                             </div>
@@ -150,13 +164,13 @@ const Regist = () => {
 
                             {/* 비밀번호 유효성 결과 */}
                             {/* 1. 사용 가능 */}
-                            {pwCheckRes && pwCheckRes.code == 200 ?
+                            {inputState.password != "" && pwCheckRes && pwCheckRes.code == 200 ?
                             <div class="p-4 mb-4 text-sm text-gray-700 bg-green-100 rounded-lg dark:bg-gray-700 dark:text-gray-300" role="alert">
                                 <span class="font-medium">{pwCheckRes.msg}</span>
                             </div>
                             :null}
                             {/* 2. 사용 불가능 */}
-                            {pwCheckRes && pwCheckRes.code != 200 ?
+                            {inputState.password != "" && pwCheckRes && pwCheckRes.code != 200 ?
                             <div class="p-4 mb-4 text-sm text-gray-700 bg-red-100 rounded-lg dark:bg-gray-700 dark:text-gray-300" role="alert">
                                 <span class="font-medium">{pwCheckRes.msg}</span>
                             </div>
@@ -165,9 +179,15 @@ const Regist = () => {
                         {/* 비밀번호 확인 */}
                         <div className="mb-6">
                             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">비밀번호 확인</label>
-                            <input type="password" id="passwordConfirm" value={inputState.passwordConfirm} onChange={handleChange}
+                            <input type="password" id="passwordConfirm" value={inputState.passwordConfirm} onChange={(e) => {handleChange(e); pwSameCheck(e);}}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="" required=""></input>
+                            {/* 비밀번호 동일 체크 */}
+                            { inputState.passwordConfirm == "" || pwSameRes ? null:
+                                <div class="p-4 mb-4 text-sm text-gray-700 bg-red-100 rounded-lg dark:bg-gray-700 dark:text-gray-300" role="alert">
+                                    <span class="font-medium">비밀번호가 동일하지 않습니다.</span>
+                                </div>
+                            }
                         </div>
                         {/* 이름 */}
                         <div className="mb-6">
@@ -176,7 +196,7 @@ const Regist = () => {
                             <input
                                 type="text" id="name" value={inputState.name} onChange={handleChange}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="" required=""></input>
+                                placeholder="이름은 한글만 가능합니다." required=""></input>
                         </div>
                         {/* 이메일 */}
                         <div className="mb-6">

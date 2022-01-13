@@ -42,8 +42,9 @@ const Login = () => {
 
         if (isNormal) {
             loginAPI(inputState)
-            .then(res => alert(`로그인 성공: ${res.data.accessToken}`))
-            .catch(err => alert(`로그인 실패: ${err}`));
+            // To do : 로그인 status code 바뀌면 메인으로 페이지 이동하게 코드 수정
+            .then(res => alert(`로그인 성공: ${res.accessToken}`))
+            .catch(err => {alert(`로그인 실패: ${err}`); console.log(err)});
         } else {
             alert(msg)
         }

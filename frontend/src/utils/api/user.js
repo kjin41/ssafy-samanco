@@ -5,6 +5,8 @@ async function loginAPI(inputState) {
         id: inputState.id,
         password: inputState.password
     })
+    .then(res => res.data)
+    .catch(err => err.response.data);
 }
 
 async function registAPI(inputState) {
@@ -14,7 +16,9 @@ async function registAPI(inputState) {
         name: inputState.name,
         password: inputState.password,
         phone: inputState.phone
-    });
+    })
+    .then(res => res.data)
+    .catch(err => err.response.data);
 }
 
 async function idCheckAPI(id) {
