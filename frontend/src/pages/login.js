@@ -93,7 +93,7 @@ const Login = ({ data, location }) => {
                         </label>
                         </div>
                         <div class="text-sm">
-                        <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
+                        <a href="/findpw" class="font-medium text-indigo-600 hover:text-indigo-500">
                             비밀번호 찾기
                         </a>
                         </div>
