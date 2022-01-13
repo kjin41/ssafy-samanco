@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react'
 import PropTypes from 'prop-types'
-import { graphql } from 'gatsby'
+import { graphql, navigate } from 'gatsby'
 import { Helmet } from 'react-helmet'
 
 import { Layout } from '../components/common'
@@ -40,7 +40,10 @@ const Login = ({ data, location }) => {
 
         if (isNormal) {
             loginAPI()
-            .then(res => alert(`로그인 성공: ${res.data.accessToken}`))
+            .then(res => {
+                alert(`로그인 성공: ${res.data.accessToken}`);
+                navigate("/", {replace: true});
+            })
             .catch(err => alert(`로그인 실패: ${err}`));
         } else {
         }

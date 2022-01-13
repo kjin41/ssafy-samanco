@@ -1,6 +1,6 @@
 import React, {useCallback, useState, useEffect} from 'react'
 import PropTypes from 'prop-types'
-import { graphql } from 'gatsby'
+import { graphql, navigate  } from 'gatsby'
 import { Helmet } from 'react-helmet'
 
 import { Layout } from '../components/common'
@@ -55,8 +55,7 @@ const Regist = ({ data, location }) => {
 
         idCheckAPI()
         .then(res => {
-            console.log(res);
-            console.log(res.data.message);
+            // console.log(res.data.message);
             if(res.data.statusCode == 402) {
                 setIdError('중복된 아이디입니다');
             }
@@ -132,14 +131,17 @@ const Regist = ({ data, location }) => {
         event.preventDefault();
 
         let isNormal = true;
-        if(nickname.length===0 || email.length===0 || phone.length===0 || !emailReg.test(email) || !phoneReg.test(phone) || id.length===0 || !idReg.test(id) ||
-         password!==passwordCheck || !pwReg.test(password) || passwordCheck.length===0 || password.length===0) {
+        if(nickname.length===0 || email.length===0 || phone.length===0 || !emailReg.test(email) || !phoneReg.test(phone) ||
+            id.length===0 || !idReg.test(id) ||
+            password!==passwordCheck || !pwReg.test(password) || passwordCheck.length===0 || password.length===0) {
             isNormal = false;
         }
 
         if (isNormal) {
             registAPI()
-            .then(res => {alert(`회원가입 성공: ${res}`); console.log(res.data); console.log(res.data.message)})
+            .then(res => {
+                alert(`회원가입 성공: ${res}`);
+                navigate("/login", {replace: true})})
             .catch(err => alert(`회원가입 실패: ${err}`));
         } else {
         }
