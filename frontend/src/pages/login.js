@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { graphql, Link } from 'gatsby'
+import { graphql, Link, navigate } from 'gatsby'
 import { Helmet } from 'react-helmet'
 
 import { Layout } from '../components/common'
@@ -40,11 +40,26 @@ const Login = () => {
             msg = "비밀번호를 입력해주세요."
         }
 
-        if (isNormal) {
+        if (isNormal) { // 유효성 검사 통과 시 login API 요청
+
             loginAPI(inputState)
-            // To do : 로그인 status code 바뀌면 메인으로 페이지 이동하게 코드 수정
-            .then(res => alert(`로그인 성공: ${res.accessToken}`))
-            .catch(err => {alert(`로그인 실패: ${err}`); console.log(err)});
+            .then(res => {
+                switch (res.statusCode) {
+                    case 200: // 로그인 성공
+                        alert(`로그인 성공: ${res.accessToken}`)
+                        navigate("/")
+                        break;
+                    case 401: // 비밀번호 틀림
+                        alert("비밀번호를 확인해주세요.")
+                        break;
+                    case 404: // 유저 정보 X
+                        alert("회원 정보가 존재하지 않습니다.")
+                        break;
+                    default:
+                        alert(`로그인 중 문제가 발생했습니다. 관리자에게 문의하세요. 에러코드 (${res.statusCode})`)
+                        break;
+                }
+            })
         } else {
             alert(msg)
         }

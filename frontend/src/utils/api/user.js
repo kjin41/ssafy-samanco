@@ -27,13 +27,14 @@ async function idCheckAPI(id) {
     .catch(err => err.response.data)
 }
 
-async function pwCheckAPI(password) {
-    return await api.post("/api/v1/users/passcheck/", {
-        id: "",
-        password: password
-    })
-    .then(res => res.data)
-    .catch(err => err.response.data)
-}
+// 비밀번호 유효성 테스트는 FE에서 처리!
+// async function pwCheckAPI(password) {
+//     return await api.post("/api/v1/users/passcheck/", {
+//         id: "",
+//         password: password
+//     })
+//     .then(res => res.data)
+//     .catch(err => err.response.data)
+// }
 
-export { loginAPI, registAPI, idCheckAPI, pwCheckAPI }
+export { loginAPI, registAPI, idCheckAPI }
