@@ -45,20 +45,26 @@ const Regist = ({ data, location }) => {
         } else if(!idReg.test(id)) {
             setIdError('아이디 입력 양식을 확인해 주세요');
         } else if(idReg.test(id) && id.length!==0) {
-            // setIdError('');
+            setIdError('');
             onChangeIdCheck(e);
         }
     }
 
-    const onChangeIdCheck = (event) => {
-        event.preventDefault();
+    const onChangeIdCheck = (e) => {
+        let id = e.target.value;
 
         idCheckAPI()
-        .then(res => {console.log(res.data.message); setIdError('');})
-        .catch(err => {setIdError('중복된 아이디입니다');});
+        .then(res => {
+            console.log(res);
+            console.log(res.data.message);
+            if(res.data.statusCode == 402) {
+                setIdError('중복된 아이디입니다');
+            }
+        })
+        .catch(err => { });
 
         async function idCheckAPI() {
-            return await api.post("/api/v1/users/me", {
+            return await api.get('/api/v1/users/idcheck/'+id, {
                 id: id,
             });
         }
@@ -129,11 +135,7 @@ const Regist = ({ data, location }) => {
         if(nickname.length===0 || email.length===0 || phone.length===0 || !emailReg.test(email) || !phoneReg.test(phone) || id.length===0 || !idReg.test(id) ||
          password!==passwordCheck || !pwReg.test(password) || passwordCheck.length===0 || password.length===0) {
             isNormal = false;
-        } else {
-            // isNormal = true;
         }
-
-        // console.log(id, password, nickname, email, phone);
 
         if (isNormal) {
             registAPI()
@@ -169,7 +171,7 @@ const Regist = ({ data, location }) => {
                     <form onSubmit={onSubmit}>
                         <div class="mb-6">
                             <label for="id" class="block mb-2 text-sm font-large text-gray-900 dark:text-gray-300">아이디</label>
-                            <input type="text" id="id" value={id} onChange={(e) => {onChangeId(e); onChangeIdCheck(e);}} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="8자 이상 ~ 16자 이하" />
+                            <input type="text" id="id" value={id} onChange={(e) => {onChangeId(e); }} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required placeholder="8자 이상 ~ 16자 이하" />
                             {idError && <div style={{color:'red'}}>{idError}</div>}
                         </div>
                         <div class="mb-6">
