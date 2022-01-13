@@ -21,7 +21,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final QBaseEntity _super = new QBaseEntity(this);
 
-    public final StringPath department = createString("department");
+    public final StringPath email = createString("email");
 
     //inherited
     public final NumberPath<Long> id = _super.id;
@@ -30,7 +30,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath password = createString("password");
 
-    public final StringPath position = createString("position");
+    public final StringPath phone = createString("phone");
 
     public final StringPath userId = createString("userId");
 
