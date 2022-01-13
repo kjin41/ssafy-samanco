@@ -5,12 +5,16 @@ import { Helmet } from 'react-helmet'
 
 import { Layout } from '../components/common'
 
-import api from "../utils/api"
+import { registAPI, idCheckAPI, pwCheckAPI } from "../utils/api/user"
 
 /**
 * Regist page (/:regist)
 */
 const Regist = () => {
+
+    // id, password 유효성 검사 반환 결과 : idCheckRes, pwCheckRes
+    const [idCheckRes, setIdCheckRes] = useState(null);
+    const [pwCheckRes, setPwCheckRes] = useState(null);
 
     const [inputState, setInputState] = useState({
         id: "",
@@ -23,11 +27,24 @@ const Regist = () => {
 
     const handleChange = (e) => {
         const { id, value } = e.target;
-
         setInputState((prevState) => ({
             ...prevState,
             [id]: value,
         }));
+    };
+
+    const idHandleChange = (e) => {
+        const value = e.target.value;
+        idCheckAPI(value).then(res => {
+            setIdCheckRes({code:res.statusCode, msg: res.message})
+        })
+    };
+
+    const pwHandleChange = (e) => {
+        const value = e.target.value;
+        pwCheckAPI(value).then(res => {
+            setPwCheckRes({code:res.statusCode, msg: res.message})
+        })
     };
 
     const idReg = /^[A-Za-z0-9_-]{4,8}$/;
@@ -37,12 +54,13 @@ const Regist = () => {
     // 비밀번호 정규표현식 : 최소 8자, 최대 16자, 하나 이상의 문자, 하나 이상의 숫자, 하나 이상의 특수문자
 
     const emailReg = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/
+    // 이메일 정규표현식
 
     const phoneReg = /^[0-9]{8,13}$/;
+    // 전화번호 정규표현식
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(inputState)
 
         let isNormal = true;
         let msg = "";
@@ -82,21 +100,11 @@ const Regist = () => {
         }
 
         if (isNormal) {
-            registAPI()
+            registAPI(inputState)
             .then(res => {alert(`회원가입 성공: ${res.data.message}`); })
             .catch(err => alert(`회원가입 실패: ${err}`));
         } else {
             alert(msg)
-        }
-
-        async function registAPI() {
-            return await api.post("/api/v1/users", {
-                email: inputState.email,
-                id: inputState.id,
-                name: inputState.name,
-                password: inputState.password,
-                phone: inputState.phone
-            });
         }
     };
 
@@ -114,16 +122,45 @@ const Regist = () => {
                             <label
                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">아이디</label>
                             <input
-                                type="text" id="id" value={inputState.id} onChange={handleChange}
+                                type="text" id="id" value={inputState.id} onChange={(e) => {handleChange(e); idHandleChange(e);}}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="4~8자리" required=""></input>
+
+                            {/* 아이디 유효성 결과 */}
+                            {/* 1. 사용 가능 */}
+                            {idCheckRes && idCheckRes.code == 200 ?
+                            <div class="p-4 mb-4 text-sm text-gray-700 bg-green-100 rounded-lg dark:bg-gray-700 dark:text-gray-300" role="alert">
+                                <span class="font-medium">{idCheckRes.msg}</span>
+                            </div>
+                            :null}
+                            {/* 2. 사용 불가능 */}
+                            {idCheckRes && idCheckRes.code != 200 ?
+                            <div class="p-4 mb-4 text-sm text-gray-700 bg-red-100 rounded-lg dark:bg-gray-700 dark:text-gray-300" role="alert">
+                                <span class="font-medium">{idCheckRes.msg}</span>
+                            </div>
+                            :null}
                         </div>
+
                         {/* 비밀번호 */}
                         <div className="mb-6">
                             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">비밀번호</label>
-                            <input type="password" id="password" value={inputState.password} onChange={handleChange}
+                            <input type="password" id="password" value={inputState.password} onChange={(e) => {handleChange(e); pwHandleChange(e);}}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="8~16자리, 영문자, 숫자, 특수문자" required=""></input>
+
+                            {/* 비밀번호 유효성 결과 */}
+                            {/* 1. 사용 가능 */}
+                            {pwCheckRes && pwCheckRes.code == 200 ?
+                            <div class="p-4 mb-4 text-sm text-gray-700 bg-green-100 rounded-lg dark:bg-gray-700 dark:text-gray-300" role="alert">
+                                <span class="font-medium">{pwCheckRes.msg}</span>
+                            </div>
+                            :null}
+                            {/* 2. 사용 불가능 */}
+                            {pwCheckRes && pwCheckRes.code != 200 ?
+                            <div class="p-4 mb-4 text-sm text-gray-700 bg-red-100 rounded-lg dark:bg-gray-700 dark:text-gray-300" role="alert">
+                                <span class="font-medium">{pwCheckRes.msg}</span>
+                            </div>
+                            :null}
                         </div>
                         {/* 비밀번호 확인 */}
                         <div className="mb-6">

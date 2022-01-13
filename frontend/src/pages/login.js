@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet'
 import { Layout } from '../components/common'
 import { MetaData } from '../components/common/meta'
 
-import api from "../utils/api"
+import { loginAPI } from "../utils/api/user"
 /**
 * Login page (/:login)
 *
@@ -41,19 +41,11 @@ const Login = () => {
         }
 
         if (isNormal) {
-            loginAPI()
+            loginAPI(inputState)
             .then(res => alert(`로그인 성공: ${res.data.accessToken}`))
             .catch(err => alert(`로그인 실패: ${err}`));
         } else {
             alert(msg)
-        }
-
-        async function loginAPI() {
-            return await api.post("/api/v1/auth/login", {
-                id: inputState.id,
-                password: inputState.password
-            })
-
         }
     };
 
