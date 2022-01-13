@@ -15,6 +15,8 @@ import javax.persistence.Entity;
 @Getter
 @Setter
 public class User extends BaseEntity{
+//    String position;
+//    String department;
     String name;
     String userId;
     String email;
