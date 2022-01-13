@@ -83,7 +83,7 @@ const Regist = () => {
 
         if (isNormal) {
             registAPI()
-            .then(res => {alert(`회원가입 성공: ${res}`); console.log(res.data.message)})
+            .then(res => {alert(`회원가입 성공: ${res.data.message}`); })
             .catch(err => alert(`회원가입 실패: ${err}`));
         } else {
             alert(msg)
@@ -91,8 +91,11 @@ const Regist = () => {
 
         async function registAPI() {
             return await api.post("/api/v1/users", {
+                email: inputState.email,
                 id: inputState.id,
-                password: inputState.password
+                name: inputState.name,
+                password: inputState.password,
+                phone: inputState.phone
             });
         }
     };
