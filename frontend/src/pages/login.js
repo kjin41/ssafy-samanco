@@ -46,7 +46,7 @@ const Login = () => {
             .then(res => {
                 switch (res.statusCode) {
                     case 200: // 로그인 성공
-                        alert(`로그인 성공: ${res.accessToken}`)
+                        // alert(`로그인 성공: ${res.accessToken}`)
                         sessionStorage.setItem("userToken", res.accessToken);
                         sessionStorage.setItem("userId", inputState.id);
                         getUserInfo(res.accessToken).then(res=>console.log(res))
