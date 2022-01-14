@@ -7,7 +7,6 @@ import { Layout } from '../components/common'
 import { MetaData } from '../components/common/meta'
 
 import api from '../apis/api'
-
 /**
 * Login page (/:login)
 *
@@ -41,7 +40,11 @@ const Login = ({ data, location }) => {
         if (isNormal) {
             loginAPI()
             .then(res => {
-                alert(`로그인 성공: ${res.data.accessToken}`);
+                // alert(`로그인 성공: ${res.data.accessToken}`);
+                alert('로그인에 성공했습니다');
+                sessionStorage.setItem("userToken", res.data.accessToken);
+                sessionStorage.setItem("userId", id);
+
                 navigate("/", {replace: true});
             })
             .catch(err => alert(`로그인 실패: ${err}`));

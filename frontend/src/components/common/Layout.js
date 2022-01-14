@@ -4,8 +4,9 @@ import { Helmet } from 'react-helmet'
 import { Link, StaticQuery, graphql } from 'gatsby'
 import Img from 'gatsby-image'
 
+import { useSelector } from 'react-redux'
+
 import { Navigation } from '.'
-import config from '../../utils/siteConfig'
 
 // Styles
 import '../../styles/app.css'
@@ -21,11 +22,14 @@ import '../../styles/app.css'
 const DefaultLayout = ({ data, children, bodyClass, isHome }) => {
     // data : 사이트 관련 정보
     // children : 메인 컨텐츠
-    // bodyClass : 헬멧 태그의 클래스명 
+    // bodyClass : 헬멧 태그의 클래스명
     // isHome : 메인 페이지인지 여부 반환
     const site = data.allGhostSettings.edges[0].node
     const twitterUrl = site.twitter ? `https://twitter.com/${site.twitter.replace(/^@/, ``)}` : null
     const facebookUrl = site.facebook ? `https://www.facebook.com/${site.facebook.replace(/^\//, ``)}` : null
+
+    const isLogin = sessionStorage.getItem("userToken")
+    const userId = sessionStorage.getItem("userId")
 
     return (
         <>
@@ -54,8 +58,19 @@ const DefaultLayout = ({ data, children, bodyClass, isHome }) => {
                                 </div>
                                 <div className="site-mast-right">
                                     {/* 우측 버튼 */}
-                                    <Link to="/login" className="site-nav-item" >로그인</Link>
-                                    <Link to="/regist" className="site-nav-item" >회원가입</Link>
+                                    {isLogin ?
+                                    <>
+                                        <span className='mr-5'>{userId}님, 안녕하세요</span>
+                                        <Link to="/" className="site-nav-item" >마이페이지</Link>
+                                        <Link to="/" onClick={()=>{alert("로그아웃 되었습니다."); sessionStorage.clear(); }} className="site-nav-item" >로그아웃</Link>
+                                    </>
+                                    :
+                                    <>
+                                        <Link to="/login" className="site-nav-item">로그인</Link>
+                                        <Link to="/regist" className="site-nav-item">회원가입</Link>
+                                    </>
+                                    }
+
                                     {/* { site.twitter && <a href={ twitterUrl } className="site-nav-item" target="_blank" rel="noopener noreferrer"><img className="site-nav-icon" src="/images/icons/twitter.svg" alt="Twitter" /></a>}
                                     { site.facebook && <a href={ facebookUrl } className="site-nav-item" target="_blank" rel="noopener noreferrer"><img className="site-nav-icon" src="/images/icons/facebook.svg" alt="Facebook" /></a>}
                                     <a className="site-nav-item" href={ `https://feedly.com/i/subscription/feed/${config.siteUrl}/rss/` } target="_blank" rel="noopener noreferrer"><img className="site-nav-icon" src="/images/icons/rss.svg" alt="RSS Feed" /></a> */}
@@ -64,8 +79,8 @@ const DefaultLayout = ({ data, children, bodyClass, isHome }) => {
                             { isHome ?
                                 <div className="site-banner">
                                     {/* 메인 타이틀, 설명 */}
-                                    <h1 className="site-banner-title">SSAFIA</h1>
-                                    <p className="site-banner-desc">MAFIA For SSAFY</p>
+                                    <h1 className="site-banner-title">싸피사만코</h1>
+                                    <p className="site-banner-desc">Meeting For SSAFY</p>
                                     {/* <h1 className="site-banner-title">{site.title}</h1>
                                     <p className="site-banner-desc">{site.description}</p> */}
                                 </div> :
