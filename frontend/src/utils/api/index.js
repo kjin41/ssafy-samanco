@@ -15,7 +15,7 @@ export const getAuth = (token) => axios.create({
         "Content-Type": `application/json;charset=UTF-8`,
         "Access-Control-Allow-Origin": "*",
         "Accept": "application/json",
-        "Authorization": token,
+        "Authorization": "Bearer "+token,
     }
 })
 
