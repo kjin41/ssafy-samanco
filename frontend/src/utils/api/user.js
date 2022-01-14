@@ -1,4 +1,4 @@
-import api from "./index"
+import api, {getAuth} from "./index"
 
 async function loginAPI(inputState) {
     return await api.post("/api/v1/auth/login", {
@@ -37,4 +37,10 @@ async function idCheckAPI(id) {
 //     .catch(err => err.response.data)
 // }
 
-export { loginAPI, registAPI, idCheckAPI }
+async function getUserInfo(token) {
+    return await getAuth(token).get("/api/v1/users/me")
+    .then(res => res.data)
+    .catch(err => err.response.data)
+}
+
+export { loginAPI, registAPI, idCheckAPI, getUserInfo }

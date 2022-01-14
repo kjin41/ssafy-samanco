@@ -27,6 +27,9 @@ const DefaultLayout = ({ data, children, bodyClass, isHome }) => {
     const twitterUrl = site.twitter ? `https://twitter.com/${site.twitter.replace(/^@/, ``)}` : null
     const facebookUrl = site.facebook ? `https://www.facebook.com/${site.facebook.replace(/^\//, ``)}` : null
 
+    const isLogin = sessionStorage.getItem("userToken")
+    const userId = sessionStorage.getItem("userId")
+
     return (
         <>
             <Helmet>
@@ -54,11 +57,18 @@ const DefaultLayout = ({ data, children, bodyClass, isHome }) => {
                                 </div>
                                 <div className="site-mast-right">
                                     {/* 우측 버튼 */}
-                                    <Link to="/login" className="site-nav-item" >로그인</Link>
-                                    <Link to="/regist" className="site-nav-item" >회원가입</Link>
-                                    {/* { site.twitter && <a href={ twitterUrl } className="site-nav-item" target="_blank" rel="noopener noreferrer"><img className="site-nav-icon" src="/images/icons/twitter.svg" alt="Twitter" /></a>}
-                                    { site.facebook && <a href={ facebookUrl } className="site-nav-item" target="_blank" rel="noopener noreferrer"><img className="site-nav-icon" src="/images/icons/facebook.svg" alt="Facebook" /></a>}
-                                    <a className="site-nav-item" href={ `https://feedly.com/i/subscription/feed/${config.siteUrl}/rss/` } target="_blank" rel="noopener noreferrer"><img className="site-nav-icon" src="/images/icons/rss.svg" alt="RSS Feed" /></a> */}
+                                    {isLogin?
+                                    <>
+                                        <span className='mr-5'>{userId}님, 안녕하세요</span>
+                                        <Link to="/" className="site-nav-item" >마이페이지</Link>
+                                        <Link to="/" onClick={()=>{alert("로그아웃 되었습니다."); sessionStorage.clear(); }} className="site-nav-item" >로그아웃</Link>
+                                    </>
+                                    :
+                                    <>
+                                        <Link to="/login" className="site-nav-item" >로그인</Link>
+                                        <Link to="/regist" className="site-nav-item" >회원가입</Link>
+                                    </>
+                                    }
                                 </div>
                             </div>
                             { isHome ?
@@ -66,13 +76,10 @@ const DefaultLayout = ({ data, children, bodyClass, isHome }) => {
                                     {/* 메인 타이틀, 설명 */}
                                     <h1 className="site-banner-title">SSAFIA</h1>
                                     <p className="site-banner-desc">MAFIA For SSAFY</p>
-                                    {/* <h1 className="site-banner-title">{site.title}</h1>
-                                    <p className="site-banner-desc">{site.description}</p> */}
                                 </div> :
                                 null}
                             <nav className="site-nav">
                                 <div className="site-nav-left">
-                                    {/* The navigation items as setup in Ghost */}
                                     {/* 왼쪽 네비게이션 : home, tag, author, help */}
                                     <Navigation data={site.navigation} navClass="site-nav-item" />
                                 </div>
