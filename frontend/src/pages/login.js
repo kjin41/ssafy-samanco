@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet'
 import { Layout } from '../components/common'
 import { MetaData } from '../components/common/meta'
 
-import { loginAPI } from "../utils/api/user"
+import { getUserInfo, loginAPI } from "../utils/api/user"
 /**
 * Login page (/:login)
 *
@@ -47,6 +47,9 @@ const Login = () => {
                 switch (res.statusCode) {
                     case 200: // 로그인 성공
                         alert(`로그인 성공: ${res.accessToken}`)
+                        sessionStorage.setItem("userToken", res.accessToken);
+                        sessionStorage.setItem("userId", inputState.id);
+                        getUserInfo(res.accessToken).then(res=>console.log(res))
                         navigate("/")
                         break;
                     case 401: // 비밀번호 틀림
