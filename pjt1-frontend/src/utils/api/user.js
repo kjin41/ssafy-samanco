@@ -27,5 +27,12 @@ async function idCheckAPI(id) {
     .catch(err => err.response.data)
 }
 
+async function loginInfo(token) {
+    return await getAuth(token).get("/api/v1/users/me")
+    .then(res => res.data)
+    .catch(err => err.response.data)
+}
 
-export { loginAPI, registAPI, idCheckAPI }
+
+
+export { loginAPI, registAPI, idCheckAPI,loginInfo }
