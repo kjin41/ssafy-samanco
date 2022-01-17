@@ -5,6 +5,8 @@ import { graphql } from 'gatsby'
 import { Layout, PostCard, Pagination } from '../components/common'
 import { MetaData } from '../components/common/meta'
 
+import 'semantic-ui-css/semantic.min.css';
+
 // 추가됨
 import "../styles/global.css";
 
